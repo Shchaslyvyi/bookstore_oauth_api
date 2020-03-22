@@ -2,6 +2,8 @@ package access_token
 
 import (
 	"time"
+
+	"github.com/shchaslyvyi/bookstore_oauth_api/src/utils/errors"
 )
 
 const (
@@ -14,6 +16,11 @@ type AccessToken struct {
 	UserID      int64  `json:"user_id"`
 	ClientID    int64  `json:"client_id"`
 	Expires     int64  `json:"expires"`
+}
+
+// Repository interface
+type Repository interface {
+	GetByID(string) (*AccessToken, *errors.RestErr)
 }
 
 // GetNewAccessToken returns the valid access token
