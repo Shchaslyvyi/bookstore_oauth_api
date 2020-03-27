@@ -3,8 +3,8 @@ package app
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/domain/access_token"
+	"github.com/shchaslyvyi/bookstore_oauth_api/src/http"
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/repository/db"
-	"github.com/shchaslyvyi/bookstore_oauth_api/src/repository/http"
 )
 
 var (
