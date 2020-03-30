@@ -23,8 +23,8 @@ type RestUsersRepository interface {
 
 type usersRepository struct{}
 
-// NewRepository function to access an dbRepository struct
-func NewRepository() RestUsersRepository {
+// NewRestUserRepository function to access an dbRepository struct
+func NewRestUserRepository() RestUsersRepository {
 	return &usersRepository{}
 }
 

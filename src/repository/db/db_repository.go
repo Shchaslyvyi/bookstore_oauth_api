@@ -4,6 +4,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/clients/cassandra"
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/domain/access_token"
+
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/utils/errors"
 )
 
@@ -13,19 +14,19 @@ const (
 	queryUpdateExpires     = "UPDATE access_tokens SET expires=? WHERE access_tokens=?;"
 )
 
-// DbRepository interface
-type DbRepository interface {
+// NewRepository function to access an dbRepository struct
+func NewRepository() DataBaseRepository {
+	return &dbRepository{}
+}
+
+// DataBaseRepository interface
+type DataBaseRepository interface {
 	GetByID(string) (*access_token.AccessToken, *errors.RestErr)
 	Create(access_token.AccessToken) *errors.RestErr
 	UpdateExpirationTime(access_token.AccessToken) *errors.RestErr
 }
 
 type dbRepository struct{}
-
-// NewRepository function to access an dbRepository struct
-func NewRepository() DbRepository {
-	return &dbRepository{}
-}
 
 func (r *dbRepository) GetByID(ID string) (*access_token.AccessToken, *errors.RestErr) {
 	var result access_token.AccessToken

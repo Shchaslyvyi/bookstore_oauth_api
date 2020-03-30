@@ -1,15 +1,49 @@
 package access_token
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/shchaslyvyi/bookstore_oauth_api/src/utils/errors"
+	"github.com/shchaslyvyi/bookstore_users-api/utils/crypto_utils"
 )
 
 const (
-	expirationTime = 24
+	expirationTime             = 24
+	grantTypePasswort          = "passwort"
+	grantTypeClientCredentials = "client_credentials"
 )
+
+// AccessTokenRequest struct defines an access token
+type AccessTokenRequest struct {
+	GrantType string `json:"grant_type"`
+	Scope     string `json:"scope"`
+
+	// Used for password grant_type
+	Username string `json:"username"`
+	Password string `json:"password"`
+
+	// Used for client_credentials grant type
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+}
+
+// Validate func validates the Access Token Request
+func (at *AccessTokenRequest) Validate() *errors.RestErr {
+	switch at.GrantType {
+	case grantTypePasswort:
+		break
+
+	case grantTypeClientCredentials:
+		break
+
+	default:
+		return errors.NewBadRequestError("Invalid grant type parametr.")
+	}
+	// TADO: validate parameters for each grant_type.
+	return nil
+}
 
 // AccessToken struct defines an access token
 type AccessToken struct {
@@ -38,8 +72,9 @@ func (at *AccessToken) Validate() *errors.RestErr {
 }
 
 // GetNewAccessToken returns the valid access token
-func GetNewAccessToken() AccessToken {
+func GetNewAccessToken(userID int64) AccessToken {
 	return AccessToken{
+		UserID:  userID,
 		Expires: time.Now().UTC().Add(expirationTime * time.Hour).Unix(),
 	}
 }
@@ -47,4 +82,9 @@ func GetNewAccessToken() AccessToken {
 // IsExpired function returns the validity state of the access token
 func (at AccessToken) IsExpired() bool {
 	return time.Unix(at.Expires, 0).Before(time.Now().UTC())
+}
+
+// Generate function returns generatedaccess token
+func (at *AccessToken) Generate() {
+	at.AccessToken = crypto_utils.GetMd5(fmt.Sprintf("at-%d-%d-ran", at.UserID, at.Expires))
 }
